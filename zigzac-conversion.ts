@@ -43,7 +43,7 @@ function calculateNrOfColumns(sLength: number, numRows: number): number {
   return nrOfColumns;
 }
 
-function solution(s: string, numRows: number): string {
+function bruteforce(s: string, numRows: number): string {
   const nrOfColumns = calculateNrOfColumns(s.length, numRows);
   let matrix: string[][] = Array.from({ length: numRows }, () =>
     Array.from({ length: nrOfColumns }, () => ""),
@@ -95,12 +95,12 @@ function recursive(s: string, numRows: number): string {
       if (isTopRow) {
         strIndex += rowsBelow * 2;
         if (s.at(strIndex)) text += s[strIndex];
-        console.log({ rowsBelow, i });
+        // console.log({ rowsBelow, i });
       }
       if (isBottomRow) {
         strIndex += rowsAbove * 2;
         if (s.at(strIndex)) text += s[strIndex];
-        console.log({ rowsAbove, i });
+        // console.log({ rowsAbove, i });
       }
       if (strIndex >= s.length - 1) break;
     }
@@ -108,12 +108,39 @@ function recursive(s: string, numRows: number): string {
   return text;
 }
 
-function convert(s: string, numRows: number): string {
-  return recursive(s, numRows);
+function solution(s: string, numRows: number): string {
+  if (numRows === 1 || numRows > s.length) {
+    return s;
+  }
+  const rows = Array.from({ length: numRows }, () => "");
+  let direction: "down" | "up" = "down";
+  let rowId = 0;
+  for (let i = 0; i < s.length; i++) {
+    rows[rowId] += s[i];
+    if (direction === "down") {
+    }
+    if (rowId === 0) {
+      direction = "down";
+    }
+    if (rowId === numRows - 1) {
+      direction = "up";
+    }
+    if (direction === "down") {
+      rowId += 1;
+    }
+    if (direction === "up") {
+      rowId -= 1;
+    }
+  }
+  return rows.join("");
 }
 
-// console.log(convert("PAYPALISHIRING", 3)); // PAHNAPLSIIGYIR
-// console.log(convert("AB", 1)); // AB
+function convert(s: string, numRows: number): string {
+  return solution(s, numRows);
+}
+
+console.log(convert("PAYPALISHIRING", 3)); // PAHNAPLSIIGYIR
+console.log(convert("AB", 1)); // AB
 console.log(convert("A", 2)); // A
 
 // P A H N
