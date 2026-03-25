@@ -70,9 +70,58 @@ function solution(s: string, numRows: number): string {
   return matrixToString(matrix);
 }
 
-function convert(s: string, numRows: number): string {
-  return solution(s, numRows);
+function recursive(s: string, numRows: number): string {
+  if (numRows === 1) return s;
+  let text = "";
+  for (let i = 0; i < numRows; i++) {
+    const isMiddleRow = i > 0 && i < numRows - 1;
+    const isTopRow = i === 0;
+    const isBottomRow = i === numRows - 1;
+    const rowsBelow = numRows - (i + 1);
+    const rowsAbove = i;
+
+    let strIndex = i;
+    if (s.at(strIndex)) text += s[strIndex];
+    while (strIndex < s.length - 1) {
+      if (isMiddleRow) {
+        strIndex += rowsBelow * 2;
+        // console.log({ rowsBelow, i });
+        if (s.at(strIndex)) text += s[strIndex];
+
+        strIndex += rowsAbove * 2;
+        // console.log({ rowsAbove, i });
+        if (s.at(strIndex)) text += s[strIndex];
+      }
+      if (isTopRow) {
+        strIndex += rowsBelow * 2;
+        if (s.at(strIndex)) text += s[strIndex];
+        console.log({ rowsBelow, i });
+      }
+      if (isBottomRow) {
+        strIndex += rowsAbove * 2;
+        if (s.at(strIndex)) text += s[strIndex];
+        console.log({ rowsAbove, i });
+      }
+      if (strIndex >= s.length - 1) break;
+    }
+  }
+  return text;
 }
 
-console.log(convert("PAYPALISHIRING", 3)); // PAHNAPLSIIGYIR
-console.log(convert("AB", 1)); // AB
+function convert(s: string, numRows: number): string {
+  return recursive(s, numRows);
+}
+
+// console.log(convert("PAYPALISHIRING", 3)); // PAHNAPLSIIGYIR
+// console.log(convert("AB", 1)); // AB
+console.log(convert("A", 2)); // A
+
+// P A H N
+// APLSIIG
+// Y I R
+
+// A   I   R
+// B  HJ  P
+// C G K O
+// DF  LN
+// E   M
